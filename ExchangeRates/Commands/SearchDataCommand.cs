@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Immutable;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http;
 using System.Reactive;
@@ -29,6 +30,7 @@ public class SearchDataCommand : ReactiveCommand<Unit, Task>
         }
     }
     
+    [Obsolete("Obsolete")]
     private static async Task SearchDataAsync(MainWindowViewModel mainWindowViewModel)
     {
         var fileName = "cbr.xml";
@@ -50,7 +52,7 @@ public class SearchDataCommand : ReactiveCommand<Unit, Task>
                 var data = new CbrXmlDeserializer(fileName).Deserialize();
 
                 mainWindowViewModel.Title.Text = $"Динамика валюты - {TranslateCurrency((Currencies)mainWindowViewModel.SelectedCurrency)}";
-                mainWindowViewModel.Series[0].Values = data.Select(x => x.Value);
+                mainWindowViewModel.Series[0].Values = data;
                 mainWindowViewModel.XAxis[0].Labels = data.Select(x => x.Date.ToString("dd.MM.yyyy")).ToImmutableList();
             }
         }
@@ -64,6 +66,7 @@ public class SearchDataCommand : ReactiveCommand<Unit, Task>
         mainWindowViewModel.IsLoading = false;
     }
     
+    [Obsolete("Obsolete")]
     public SearchDataCommand(MainWindowViewModel mainWindowViewModel) : 
         base(_ => Observable.Start(async () => await SearchDataAsync(mainWindowViewModel)), canExecute: Observable.Return(true))
     {

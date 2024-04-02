@@ -10,7 +10,8 @@ public class CbrXmlDeserializer
     public IEnumerable<CurrencyValue> Deserialize()
     {
         var currencyCollection = new List<CurrencyValue>();
-
+        double prevValue = 0;
+        
         XmlDocument doc = new XmlDocument();
         doc.Load(_fileName);
         
@@ -26,8 +27,11 @@ public class CbrXmlDeserializer
                 Nominal = Convert.ToInt32(node.SelectSingleNode(".//Nominal")!.InnerText),
                 CurrencyType = currencyListNode.Attributes!["ID"]!.InnerText.ToEnum<Currencies>(),
                 Date = DateTime.Parse(node.Attributes!["Date"]!.InnerText),
+                PrevDiff = prevValue != 0 ? Convert.ToDouble(node.SelectSingleNode(".//Value")!.InnerText) - prevValue : 0
             };
             currencyCollection.Add(currencyValue);
+
+            prevValue = Convert.ToDouble(node.SelectSingleNode(".//Value")!.InnerText);
         }
         
         return currencyCollection;

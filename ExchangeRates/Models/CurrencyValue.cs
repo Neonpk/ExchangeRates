@@ -9,4 +9,6 @@ public class CurrencyValue
     public int Nominal { get; init; }
     public double Value { get; init; }
     public double VunitRate { get; init; }
+    
+    public double PrevDiff { get; init; }
 }

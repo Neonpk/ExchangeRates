@@ -83,6 +83,7 @@
                                     Series="{Binding Series}"
                                     XAxes="{Binding XAxis}"
                                     YAxes="{Binding YAxis}"
+                                    ZoomMode="Both"
                                     IsVisible="{Binding HasErrorMessage, Converter={StaticResource InverseBooleanConverter}}"
                                     />
             </Grid>

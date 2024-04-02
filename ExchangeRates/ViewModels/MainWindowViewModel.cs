@@ -1,10 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using ExchangeRates.Commands;
+using ExchangeRates.Models;
 using LiveChartsCore;
+using LiveChartsCore.Kernel;
 using LiveChartsCore.SkiaSharpView;
 using LiveChartsCore.SkiaSharpView.Painting;
 using LiveChartsCore.SkiaSharpView.VisualElements;
+using LiveChartsCore.SkiaSharpView.Painting.Effects;
 using ReactiveUI;
 using SkiaSharp;
 
@@ -12,12 +14,14 @@ namespace ExchangeRates.ViewModels;
 
 public class MainWindowViewModel : ViewModelBase
 {
+    [Obsolete("Obsolete")]
     public ISeries[] Series { get; set; } =
     [
-        new LineSeries<double>
+        new LineSeries<CurrencyValue>
         {
-            Values = new double[]{0},
-            Fill = null,
+            Values = new CurrencyValue[]{},
+            Mapping = (value, i) => new Coordinate(i, value.Value),
+            YToolTipLabelFormatter = point => $"Курс: {point.PrimaryValue.ToString("0.##")} руб. \n Разница: {point.Model!.PrevDiff.ToString("0.##")} руб."
         },
     ];
     
@@ -33,7 +37,7 @@ public class MainWindowViewModel : ViewModelBase
     [
         new Axis
         {
-            Labeler = x => $"{x} руб."
+            Labeler = x => $"{x} руб.",
         }
     ];
         
@@ -67,5 +71,5 @@ public class MainWindowViewModel : ViewModelBase
     // Commands 
 
     private SearchDataCommand? _searchDataCommand;
-    public SearchDataCommand SearchDataCommand => _searchDataCommand ??= new SearchDataCommand(this);
+    [Obsolete("Obsolete")] public SearchDataCommand SearchDataCommand => _searchDataCommand ??= new SearchDataCommand(this);
 }
