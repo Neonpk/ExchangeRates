@@ -1,0 +1,94 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ExchangeRates.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:lvc="using:LiveChartsCore.SkiaSharpView.Avalonia"
+        xmlns:controls="using:ExchangeRates.Controls"
+        xmlns:converters="using:ExchangeRates.Converters"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="ExchangeRates.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/graph-icon.ico"
+        Title="Курсы валют">
+    
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+    
+    <Window.Resources>
+        <converters:InverseBooleanConverter x:Key="InverseBooleanConverter"/>
+    </Window.Resources>
+
+    <DockPanel>
+        
+        <StackPanel Orientation="Horizontal" Margin="10 10 0 0" DockPanel.Dock="Top">
+            
+            <ComboBox 
+                SelectedIndex="{Binding SelectedCurrency}"
+                PlaceholderText="Укажите валюту"
+                Margin="0 0 10 0">
+                <ComboBox.Items>
+                    <ComboBoxItem Content="Доллар США"/>
+                    <ComboBoxItem Content="Евро"/>
+                </ComboBox.Items>
+            </ComboBox>
+            
+            <DropDownButton Margin="0 0 10 0" Content="Период">
+                
+                <DropDownButton.Flyout>
+                    <Flyout>
+                        <StackPanel>
+                            
+                            <Label Content="Начальная дата:"/>
+                            <CalendarDatePicker SelectedDate="{Binding StartDate}" 
+                                        Margin="0 10 0 15"/>
+                            
+                            <Label Content="Конечная дата:"/>
+                            <CalendarDatePicker SelectedDate="{Binding EndDate}" 
+                                                Margin="0 10 0 0"/>
+                            
+                        </StackPanel>
+                    </Flyout>
+                </DropDownButton.Flyout>
+            </DropDownButton>
+            
+            <Button Content="Получить данные" 
+                    Command="{Binding SearchDataCommand}" />
+            
+        </StackPanel>
+        
+        <Grid DockPanel.Dock="Top">
+            
+            <controls:DoubleBounceSpinner 
+                IsActive="{Binding IsLoading}"
+                ForegroundSpinner="White"
+                Diameter="60"
+                />
+            
+            <Grid IsVisible="{Binding IsLoading, Converter={StaticResource InverseBooleanConverter}}">
+                
+                <TextBlock 
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Foreground="Red"
+                    Text="{Binding ErrorMessage}"
+                    TextWrapping="WrapWithOverflow"
+                    IsVisible="{Binding HasErrorMessage}"
+                    >
+                </TextBlock>
+                                            
+                <lvc:CartesianChart DockPanel.Dock="Top"
+                                    Title="{Binding Title}"
+                                    Series="{Binding Series}"
+                                    XAxes="{Binding XAxis}"
+                                    YAxes="{Binding YAxis}"
+                                    IsVisible="{Binding HasErrorMessage, Converter={StaticResource InverseBooleanConverter}}"
+                                    />
+            </Grid>
+            
+        </Grid>
+        
+    </DockPanel>
+
+</Window>
