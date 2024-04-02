@@ -68,8 +68,11 @@ public class MainWindowViewModel : ViewModelBase
 
     public bool HasErrorMessage => !string.IsNullOrEmpty(ErrorMessage);
     
-    // Commands 
+    // Commands
 
     private SearchDataCommand? _searchDataCommand;
     [Obsolete("Obsolete")] public SearchDataCommand SearchDataCommand => _searchDataCommand ??= new SearchDataCommand(this);
+
+    private SaveJsonDataCommand? _saveJsonDataCommand;
+    [Obsolete("Obsolete")] public SaveJsonDataCommand SaveJsonDataCommand => _saveJsonDataCommand ??= new SaveJsonDataCommand(this);
 }
